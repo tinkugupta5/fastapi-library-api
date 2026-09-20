@@ -50,6 +50,28 @@ BOOKS = [
 async def read_all_books():
     return BOOKS
 
+@app.put("/books/update_book")
+async def update_book(book: BookRequest):
+    if book.id is None:
+        return {"error": "Book ID is required for update"}
+
+    updated_book = Book(**book.model_dump())
+    for index, existing_book in enumerate(BOOKS):
+        if existing_book.id == book.id:
+            BOOKS[index] = updated_book
+            return updated_book
+
+    return {"error": "Book not found"}
+
+@app.delete("/books/{book_id}")
+async def delete_book(book_id: int):
+    for index in range(len(BOOKS)):
+        if BOOKS[index].id == book_id:
+            BOOKS.pop(index)
+            return {"message": "Book deleted successfully"}
+
+    return {"error": "Book not found"}
+
 @app.get("/books/{book_id}")
 async def read_book(book_id: int):
     for book in BOOKS:
