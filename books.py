@@ -60,7 +60,6 @@ async def update_book(book: BookRequest):
         if existing_book.id == book.id:
             BOOKS[index] = updated_book
             return updated_book
-
     return {"error": "Book not found"}
 
 @app.delete("/books/{book_id}")
